@@ -12,11 +12,9 @@ interface ExpenseRepository {
 
     suspend fun addMoney(expense: Expense): Result<Unit>
 
-    suspend fun transferMoney(expense: Expense, toAccount: Account)
-
     suspend fun deleteExpense(expense: Expense): Result<Unit>
 
-    suspend fun clearAllExpenses(): Result<Unit>
+    suspend fun clearAllExpensesAndEarnings(): Result<Unit>
 
     suspend fun getExpensesAndEarningsForPeriod(from: Date, to: Date): Result<List<Expense>>
 

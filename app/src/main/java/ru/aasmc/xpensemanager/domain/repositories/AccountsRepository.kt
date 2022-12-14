@@ -3,6 +3,7 @@ package ru.aasmc.xpensemanager.domain.repositories
 import kotlinx.coroutines.flow.Flow
 import ru.aasmc.xpensemanager.domain.model.Account
 import ru.aasmc.xpensemanager.domain.model.AccountType
+import ru.aasmc.xpensemanager.domain.model.Expense
 import ru.aasmc.xpensemanager.domain.model.Result
 import java.math.BigDecimal
 
@@ -14,7 +15,7 @@ interface AccountsRepository {
 
     suspend fun addNewAccount(account: Account): Result<Unit>
 
-    fun observeTotalAmount(): Flow<BigDecimal>
+    fun observeTotalAmount(): Flow<Result<BigDecimal>>
 
     suspend fun getTotalAmount(): Result<BigDecimal>
 
@@ -22,8 +23,12 @@ interface AccountsRepository {
 
     suspend fun getAmountsGroupedByAccounts(): Result<Map<Account, BigDecimal>>
 
+    fun observeAmountsGroupedByAccounts(): Flow<Map<Account, BigDecimal>>
+
     suspend fun deleteAccount(id: Long): Result<Unit>
 
     suspend fun clearAllAccounts(): Result<Unit>
+
+    suspend fun transferMoney(fromAccount: Account, toAccount: Account, amount: BigDecimal): Result<Unit>
 
 }

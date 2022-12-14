@@ -1,19 +1,22 @@
 package ru.aasmc.xpensemanager.domain.repositories
 
+import kotlinx.coroutines.flow.Flow
 import ru.aasmc.xpensemanager.domain.model.Debt
 import ru.aasmc.xpensemanager.domain.model.Result
 import java.util.Date
 
 interface DebtRepository {
 
-    fun getAllDebts(): Result<List<Debt>>
+    suspend fun getAllDebts(): Result<List<Debt>>
 
-    fun addDebt(debt: Debt): Result<Unit>
+    fun observeAllDebts(): Flow<List<Debt>>
 
-    fun getAllDebtsForPeriod(from: Date, to: Date): Result<List<Debt>>
+    suspend fun addDebt(debt: Debt): Result<Unit>
 
-    fun deleteDebt(id: Long): Result<Unit>
+    suspend fun getAllDebtsForPeriod(from: Date, to: Date): Result<List<Debt>>
 
-    fun clearAllDebts(): Result<Unit>
+    suspend fun deleteDebt(id: Long): Result<Unit>
+
+    suspend fun clearAllDebts(): Result<Unit>
 
 }

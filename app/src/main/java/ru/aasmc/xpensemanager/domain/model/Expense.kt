@@ -7,7 +7,7 @@ data class Expense(
     val id: Long,
     val date: Date,
     val amount: BigDecimal,
-    val category: Category,
-    val fromAccount: Account,
+    val categoryId: Long,
+    val fromAccountId: Long,
     val isEarning: Boolean
 )
