@@ -6,8 +6,9 @@ import ru.aasmc.xpensemanager.domain.model.Account
 import ru.aasmc.xpensemanager.domain.model.AccountType
 import ru.aasmc.xpensemanager.domain.model.Mapper
 import java.util.*
+import javax.inject.Inject
 
-class AccountMapper: Mapper<Account, DBAccount> {
+class AccountMapper @Inject constructor(): Mapper<Account, DBAccount> {
 
     override fun toDomain(dto: DBAccount): Account = Account(
         id = dto.id,

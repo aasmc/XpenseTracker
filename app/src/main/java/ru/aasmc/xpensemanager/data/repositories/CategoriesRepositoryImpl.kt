@@ -7,8 +7,9 @@ import ru.aasmc.xpensemanager.data.cache.model.mappers.CategoryMapper
 import ru.aasmc.xpensemanager.domain.model.Category
 import ru.aasmc.xpensemanager.domain.model.Result
 import ru.aasmc.xpensemanager.domain.repositories.CategoriesRepository
+import javax.inject.Inject
 
-class CategoriesRepositoryImpl(
+class CategoriesRepositoryImpl @Inject constructor(
     private val categoryDao: CategoryDao,
     private val categoryMapper: CategoryMapper
 ) : CategoriesRepository {

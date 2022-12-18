@@ -4,8 +4,9 @@ import ru.aasmc.xpensemanager.data.cache.model.DBDebt
 import ru.aasmc.xpensemanager.domain.model.Debt
 import ru.aasmc.xpensemanager.domain.model.Mapper
 import java.util.*
+import javax.inject.Inject
 
-class DebtMapper: Mapper<Debt, DBDebt> {
+class DebtMapper @Inject constructor(): Mapper<Debt, DBDebt> {
     override fun toDomain(dto: DBDebt): Debt = Debt(
         id = dto.id,
         name = dto.name,

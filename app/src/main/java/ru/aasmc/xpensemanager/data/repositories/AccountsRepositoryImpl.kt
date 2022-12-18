@@ -12,8 +12,9 @@ import ru.aasmc.xpensemanager.domain.model.AccountType
 import ru.aasmc.xpensemanager.domain.model.Result
 import ru.aasmc.xpensemanager.domain.repositories.AccountsRepository
 import java.math.BigDecimal
+import javax.inject.Inject
 
-class AccountsRepositoryImpl constructor(
+class AccountsRepositoryImpl @Inject constructor(
     private val accountsDao: AccountsDao,
     private val transactionRunner: DatabaseTransactionRunner,
     private val accountMapper: AccountMapper

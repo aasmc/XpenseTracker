@@ -3,8 +3,9 @@ package ru.aasmc.xpensemanager.data.cache.model.mappers
 import ru.aasmc.xpensemanager.data.cache.model.DBCategory
 import ru.aasmc.xpensemanager.domain.model.Category
 import ru.aasmc.xpensemanager.domain.model.Mapper
+import javax.inject.Inject
 
-class CategoryMapper: Mapper<Category, DBCategory> {
+class CategoryMapper @Inject constructor(): Mapper<Category, DBCategory> {
 
     override fun toDomain(dto: DBCategory): Category = Category(
         id = dto.id,

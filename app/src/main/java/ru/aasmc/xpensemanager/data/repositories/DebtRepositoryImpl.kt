@@ -8,8 +8,9 @@ import ru.aasmc.xpensemanager.domain.model.Debt
 import ru.aasmc.xpensemanager.domain.model.Result
 import ru.aasmc.xpensemanager.domain.repositories.DebtRepository
 import java.util.*
+import javax.inject.Inject
 
-class DebtRepositoryImpl(
+class DebtRepositoryImpl @Inject constructor(
     private val debtDao: DebtDao,
     private val mapper: DebtMapper
 ) : DebtRepository {

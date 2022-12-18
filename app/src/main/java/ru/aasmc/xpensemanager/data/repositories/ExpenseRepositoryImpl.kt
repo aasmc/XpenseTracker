@@ -13,9 +13,10 @@ import ru.aasmc.xpensemanager.domain.model.Result
 import ru.aasmc.xpensemanager.domain.repositories.ExpenseRepository
 import java.math.BigDecimal
 import java.util.*
+import javax.inject.Inject
 import kotlin.NoSuchElementException
 
-class ExpenseRepositoryImpl(
+class ExpenseRepositoryImpl @Inject constructor(
     private val expenseDao: ExpenseDao,
     private val transactionRunner: DatabaseTransactionRunner,
     private val accountsDao: AccountsDao
