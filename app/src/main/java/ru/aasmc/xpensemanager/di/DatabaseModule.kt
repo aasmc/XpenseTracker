@@ -59,6 +59,7 @@ abstract class DatabaseModuleBinds {
     @Binds
     abstract fun bindXpenseDatabase(impl: XpenseDatabase): AppDatabase
 
+    @Binds
     abstract fun bindDBTransactionRunner(impl: RoomTransactionRunner): DatabaseTransactionRunner
 }
 
