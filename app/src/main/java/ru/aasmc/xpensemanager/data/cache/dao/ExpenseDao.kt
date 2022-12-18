@@ -9,7 +9,7 @@ import ru.aasmc.xpensemanager.data.cache.model.DBExpense
 @Dao
 interface ExpenseDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun addExpenseOrEarning(expense: DBExpense)
 
     @Query("DELETE FROM expenses WHERE id = :id")

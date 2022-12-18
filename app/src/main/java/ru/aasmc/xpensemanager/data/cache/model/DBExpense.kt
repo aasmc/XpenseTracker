@@ -18,7 +18,7 @@ import java.util.*
             entity = DBAccount::class,
             parentColumns = arrayOf("id"),
             childColumns = arrayOf("account_id"),
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.CASCADE,
         ),
         ForeignKey(
             entity = DBCategory::class,

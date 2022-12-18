@@ -6,7 +6,9 @@ import androidx.room.PrimaryKey
 import ru.aasmc.xpensemanager.domain.model.AccountType
 import java.math.BigDecimal
 
-@Entity(tableName = "accounts")
+@Entity(
+    tableName = "accounts"
+)
 data class DBAccount(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

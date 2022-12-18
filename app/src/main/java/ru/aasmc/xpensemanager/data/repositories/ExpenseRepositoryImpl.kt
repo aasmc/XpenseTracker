@@ -48,7 +48,8 @@ class ExpenseRepositoryImpl @Inject constructor(
                     )
                 )
                 updateTotalAmount(expense.amount, false)
-                expenseDao.addExpenseOrEarning(DBExpense.fromDomain(expense))
+                val dto = DBExpense.fromDomain(expense)
+                expenseDao.addExpenseOrEarning(dto)
             }
         }
     }
@@ -72,7 +73,8 @@ class ExpenseRepositoryImpl @Inject constructor(
                     )
                 )
                 updateTotalAmount(expense.amount, true)
-                expenseDao.addExpenseOrEarning(DBExpense.fromDomain(expense))
+                val dto = DBExpense.fromDomain(expense)
+                expenseDao.addExpenseOrEarning(dto)
             }
         }
     }

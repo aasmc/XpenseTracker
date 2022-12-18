@@ -4,7 +4,7 @@ import java.math.BigDecimal
 import java.util.Date
 
 data class Expense(
-    val id: Long,
+    val id: Long = 0,
     val date: Date,
     val amount: BigDecimal,
     val categoryId: Long,

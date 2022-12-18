@@ -22,7 +22,7 @@ interface AccountsDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun addNewAccount(account: DBAccount)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateAccount(account: DBAccount)
 
     @Query("SELECT * FROM accounts")

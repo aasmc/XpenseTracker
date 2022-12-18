@@ -138,27 +138,30 @@ internal suspend fun insertDebts(db: XpenseDatabase) {
     }
 }
 
-val earningToCashId = 1L
+val earningToCashId = 0L
 val earningToCash = DBExpense(
     id = earningToCashId,
     date = getTestDate(0).time,
     amount = BigDecimal.ONE,
     accountId = cashAccountId,
-    categoryId = salaryCategoryId,
+    categoryId = carCategoryId,
     isEarning = true
 )
 
-val expenseFromCardId = 2L
+val domainEarningToCash = earningToCash.toDomain()
+
+val expenseFromCardId = 0L
 val expenseFromCard = DBExpense(
     id = expenseFromCardId,
     date = getTestDate(0).time,
     amount = BigDecimal.ONE,
     accountId = cardAccountId,
-    categoryId = storeCategoryId,
+    categoryId = carCategoryId,
     isEarning = false
 )
+val domainExpenseFromCard = expenseFromCard.toDomain()
 
-val expenseFromCashId = 3L
+val expenseFromCashId = 10L
 val expenseFromCash = DBExpense(
     id = expenseFromCashId,
     date = getTestDate(0).time,
@@ -167,16 +170,8 @@ val expenseFromCash = DBExpense(
     categoryId = carCategoryId,
     isEarning = false
 )
+val domainExpenseFromCash = expenseFromCash.toDomain()
 
-internal suspend fun insertExpenses(transactionRunner: DatabaseTransactionRunner, db: XpenseDatabase) {
-    transactionRunner {
-        db.expenseDao().apply {
-            addExpenseOrEarning(earningToCash)
-            addExpenseOrEarning(expenseFromCard)
-            addExpenseOrEarning(expenseFromCash)
-        }
-    }
-}
 
 
 
