@@ -43,7 +43,7 @@ val cardAccount = DBAccount(
 )
 
 
-internal suspend fun insertCategory(db: XpenseDatabase) {
+internal suspend fun insertCategories(db: XpenseDatabase) {
     db.categoryDao().apply {
         addCategory(storeCategory)
         addCategory(carCategory)

@@ -34,9 +34,9 @@ class CategoriesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteCategory(category: Category): Result<Unit> {
+    override suspend fun deleteCategory(categoryId: Long): Result<Unit> {
         return safeCacheCall {
-            categoryDao.deleteCategory(categoryMapper.toDto(category))
+            categoryDao.deleteCategory(categoryId)
         }
     }
 }

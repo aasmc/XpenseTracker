@@ -11,5 +11,5 @@ interface CategoriesRepository {
 
     fun observeAllCategories(): Flow<List<Category>>
 
-    suspend fun deleteCategory(category: Category): Result<Unit>
+    suspend fun deleteCategory(categoryId: Long): Result<Unit>
 }

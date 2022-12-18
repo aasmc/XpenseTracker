@@ -16,8 +16,8 @@ interface CategoryDao {
     @Query("SELECT * FROM categories")
     suspend fun getAllCategories(): List<DBCategory>
 
-    @Delete
-    suspend fun deleteCategory(category: DBCategory)
+    @Query("DELETE FROM categories WHERE id = :categoryId")
+    suspend fun deleteCategory(categoryId: Long)
 
     @Query("SELECT * FROM categories")
     fun observeAllCategories(): Flow<List<DBCategory>>
