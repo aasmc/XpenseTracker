@@ -102,9 +102,39 @@ val debt = DBDebt(
     dueDate = getTestDate(1).time
 )
 
-internal suspend fun insertDebt(db: XpenseDatabase) {
+val debt2Id = 2L
+val debt2 = DBDebt(
+    id = debt2Id,
+    name = "Debt2",
+    amount = BigDecimal.TEN,
+    currencyCode = "RUB",
+    dueDate = getTestDate(2).time
+)
+
+val debt3Id = 3L
+val debt3 = DBDebt(
+    id = debt3Id,
+    name = "Debt3",
+    amount = BigDecimal.TEN,
+    currencyCode = "RUB",
+    dueDate = getTestDate(10).time
+)
+
+val debt4Id = 4L
+val debt4 = DBDebt(
+    id = debt4Id,
+    name = "Debt4",
+    amount = BigDecimal.TEN,
+    currencyCode = "RUB",
+    dueDate = getTestDate(15).time
+)
+
+internal suspend fun insertDebts(db: XpenseDatabase) {
     db.debtDao().apply {
         addDebt(debt)
+        addDebt(debt2)
+        addDebt(debt3)
+        addDebt(debt4)
     }
 }
 

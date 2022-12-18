@@ -5,7 +5,7 @@ import java.util.Currency
 import java.util.Date
 
 data class Debt(
-    val id: Long,
+    val id: Long = 0,
     val name: String,
     val amount: BigDecimal,
     val currency: Currency,
