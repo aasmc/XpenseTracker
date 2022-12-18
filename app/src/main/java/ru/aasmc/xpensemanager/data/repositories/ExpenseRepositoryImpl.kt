@@ -6,6 +6,7 @@ import ru.aasmc.xpensemanager.data.cache.database.DatabaseTransactionRunner
 import ru.aasmc.xpensemanager.data.cache.model.DBAccount
 import ru.aasmc.xpensemanager.data.cache.model.DBExpense
 import ru.aasmc.xpensemanager.data.cache.model.DBTotalAmount
+import ru.aasmc.xpensemanager.domain.exceptions.InsufficientFundsException
 import ru.aasmc.xpensemanager.domain.model.Account
 import ru.aasmc.xpensemanager.domain.model.Category
 import ru.aasmc.xpensemanager.domain.model.Expense
@@ -31,6 +32,12 @@ class ExpenseRepositoryImpl @Inject constructor(
                                 " but not account associated with the expense is in the DB"
                     )
                 val prevAmount = dbAccount.amount
+                if (prevAmount < expense.amount) {
+                    throw InsufficientFundsException(
+                        "Account with id: ${dbAccount.id} has insufficient funds." +
+                                "\nNeed: ${expense.amount}. Available: $prevAmount"
+                    )
+                }
                 accountsDao.updateAccount(
                     DBAccount(
                         id = dbAccount.id,

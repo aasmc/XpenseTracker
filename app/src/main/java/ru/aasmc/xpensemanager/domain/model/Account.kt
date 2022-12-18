@@ -5,7 +5,7 @@ import java.math.BigDecimal
 import java.util.Currency
 
 data class Account(
-    val id: Long,
+    val id: Long = 0,
     val type: AccountType,
     val amount: BigDecimal,
     val currency: Currency,

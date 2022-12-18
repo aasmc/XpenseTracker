@@ -7,6 +7,7 @@ import ru.aasmc.xpensemanager.data.cache.database.DatabaseTransactionRunner
 import ru.aasmc.xpensemanager.data.cache.model.DBAccount
 import ru.aasmc.xpensemanager.data.cache.model.DBTotalAmount
 import ru.aasmc.xpensemanager.data.cache.model.mappers.AccountMapper
+import ru.aasmc.xpensemanager.domain.exceptions.InsufficientFundsException
 import ru.aasmc.xpensemanager.domain.model.Account
 import ru.aasmc.xpensemanager.domain.model.AccountType
 import ru.aasmc.xpensemanager.domain.model.Result
@@ -50,7 +51,7 @@ class AccountsRepositoryImpl @Inject constructor(
                     )
                     accountsDao.updateTotalAmount(newTotal)
                 } else {
-                    accountsDao.addTotalAmount(DBTotalAmount(amount = account.amount))
+                    accountsDao.addTotalAmount(DBTotalAmount(id = 1L, amount = account.amount))
                 }
                 accountsDao.addNewAccount(dbAccount)
             }
@@ -144,23 +145,31 @@ class AccountsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun transferMoney(
-        fromAccount: Account,
-        toAccount: Account,
+        fromAccountId: Long,
+        toAccountId: Long,
         amount: BigDecimal
     ): Result<Unit> {
         return safeCacheCall {
             transactionRunner {
-                val fromDBAccount = accountsDao.getAccountById(fromAccount.id)
+                val fromDBAccount = accountsDao.getAccountById(fromAccountId)
                     ?: throw NoSuchElementException(
-                        "Method transferMoney is called for account: $fromAccount," +
+                        "Method transferMoney is called for account: $fromAccountId," +
                                 " but no account is in the DB"
                     )
 
-                val toDBAccount = accountsDao.getAccountById(toAccount.id)
+                if (fromDBAccount.amount < amount) {
+                    throw InsufficientFundsException(
+                        "Account with id: $fromAccountId has insufficient funds." +
+                                "\nNeed: $amount. Available: ${fromDBAccount.amount}"
+                    )
+                }
+
+                val toDBAccount = accountsDao.getAccountById(toAccountId)
                     ?: throw NoSuchElementException(
-                        "Method transferMoney is called for account: $toAccount," +
+                        "Method transferMoney is called for account: $toAccountId," +
                                 " but no account is in the DB"
                     )
+
                 updateAccountAmount(
                     prevAccount = fromDBAccount,
                     newAmount = fromDBAccount.amount.minus(amount)

@@ -7,14 +7,22 @@ import ru.aasmc.xpensemanager.data.cache.model.DBAccountType
 import ru.aasmc.xpensemanager.data.cache.model.DBCategory
 import ru.aasmc.xpensemanager.data.cache.model.DBDebt
 import ru.aasmc.xpensemanager.data.cache.model.DBExpense
+import ru.aasmc.xpensemanager.data.cache.model.DBTotalAmount
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
+
+val initialTotalAmount = BigDecimal.valueOf(20L)
+
 
 internal suspend fun insertAccounts(db: XpenseDatabase) {
     val accDao = db.accountsDao()
     accDao.addNewAccount(cardAccount)
     accDao.addNewAccount(cashAccount)
+    accDao.addTotalAmount(DBTotalAmount(
+        id = 1,
+        amount = initialTotalAmount
+    ))
 }
 val cashAccountId = 1L
 val cashAccount = DBAccount(

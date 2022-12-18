@@ -10,6 +10,8 @@ import dagger.hilt.components.SingletonComponent
 import ru.aasmc.xpensemanager.data.cache.database.DatabaseTransactionRunner
 import ru.aasmc.xpensemanager.data.cache.database.RoomTransactionRunner
 import ru.aasmc.xpensemanager.data.cache.database.XpenseDatabase
+import ru.aasmc.xpensemanager.utils.TestTransactionRunner
+import java.util.concurrent.Executors
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -20,12 +22,11 @@ object TestRoomDatabaseModule {
     fun provideDatabase(@ApplicationContext context: Context): XpenseDatabase {
         return Room.inMemoryDatabaseBuilder(context, XpenseDatabase::class.java)
             .allowMainThreadQueries()
+            .setTransactionExecutor(Executors.newSingleThreadExecutor())
             .build()
     }
 
     @Provides
-    @Singleton
-    fun provideTransactionRunner(
-        db: XpenseDatabase
-    ): DatabaseTransactionRunner = RoomTransactionRunner(db)
+    fun provideTransactionRunner(db: XpenseDatabase): DatabaseTransactionRunner =
+        RoomTransactionRunner(db)
 }

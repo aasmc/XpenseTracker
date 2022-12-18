@@ -29,6 +29,6 @@ interface AccountsRepository {
 
     suspend fun clearAllAccounts(): Result<Unit>
 
-    suspend fun transferMoney(fromAccount: Account, toAccount: Account, amount: BigDecimal): Result<Unit>
+    suspend fun transferMoney(fromAccountId: Long, toAccountId: Long, amount: BigDecimal): Result<Unit>
 
 }

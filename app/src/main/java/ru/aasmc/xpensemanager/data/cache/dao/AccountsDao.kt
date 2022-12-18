@@ -44,10 +44,10 @@ interface AccountsDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateTotalAmount(newAmount: DBTotalAmount)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addTotalAmount(totalAmount: DBTotalAmount)
 
-    @Query("SELECT * FROM total_amount LIMIT 1")
+    @Query("SELECT * FROM total_amount WHERE id = 1")
     suspend fun getTotalAmount(): DBTotalAmount?
 
 }
