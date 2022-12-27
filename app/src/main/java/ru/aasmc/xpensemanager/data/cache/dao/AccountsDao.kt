@@ -38,7 +38,7 @@ interface AccountsDao {
     suspend fun deleteAllAccounts()
     // we will have only one row with DBTotalAmount, need it because can't use
     // SQL SUM on strings - used to store BigDecimal
-    @Query("SELECT * FROM total_amount LIMIT 1")
+    @Query("SELECT * FROM total_amount WHERE id = 1")
     fun observeTotalAmount(): Flow<DBTotalAmount?>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)

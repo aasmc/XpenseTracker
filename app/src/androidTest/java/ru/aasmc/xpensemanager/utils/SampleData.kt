@@ -1,6 +1,5 @@
 package ru.aasmc.xpensemanager.utils
 
-import ru.aasmc.xpensemanager.data.cache.database.DatabaseTransactionRunner
 import ru.aasmc.xpensemanager.data.cache.database.XpenseDatabase
 import ru.aasmc.xpensemanager.data.cache.model.DBAccount
 import ru.aasmc.xpensemanager.data.cache.model.DBAccountType
@@ -8,6 +7,9 @@ import ru.aasmc.xpensemanager.data.cache.model.DBCategory
 import ru.aasmc.xpensemanager.data.cache.model.DBDebt
 import ru.aasmc.xpensemanager.data.cache.model.DBExpense
 import ru.aasmc.xpensemanager.data.cache.model.DBTotalAmount
+import ru.aasmc.xpensemanager.domain.model.Account
+import ru.aasmc.xpensemanager.domain.model.AccountType
+import ru.aasmc.xpensemanager.domain.model.Category
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
@@ -32,6 +34,13 @@ val cashAccount = DBAccount(
     currencyCode = "RUB",
     name = "Cash"
 )
+val cashAccountEntity = Account(
+    id = cashAccountId,
+    type = AccountType.CASH,
+    amount = BigDecimal.TEN,
+    currency = Currency.getInstance("RUB"),
+    name = "Cash"
+)
 
 val cardAccountId = 2L
 val cardAccount = DBAccount(
@@ -41,7 +50,21 @@ val cardAccount = DBAccount(
     currencyCode = "RUB",
     name = "Card"
 )
+val cardAccountEntity = Account(
+    id = cardAccountId,
+    type = AccountType.CARD,
+    amount = BigDecimal.TEN,
+    currency = Currency.getInstance("RUB"),
+    name = "Card"
+)
 
+val invalidAccount = Account(
+    id = 100,
+    type = AccountType.CARD,
+    amount = BigDecimal.ONE,
+    currency = Currency.getInstance("RUB"),
+    name = "Invalid"
+)
 
 internal suspend fun insertCategories(db: XpenseDatabase) {
     db.categoryDao().apply {
@@ -57,16 +80,31 @@ val storeCategory = DBCategory(
     name = "Store"
 )
 
+val storeCategoryEntity = Category(
+    id = storeCategoryId,
+    name = storeCategory.name
+)
+
 val carCategoryId = 2L
 val carCategory = DBCategory(
     id = carCategoryId,
     name = "Car"
 )
 
+val carCategoryEntity = Category(
+    id = carCategoryId,
+    name = carCategory.name
+)
+
 val salaryCategoryId = 3L
 val salaryCategory = DBCategory(
     id = salaryCategoryId,
     name = "salary"
+)
+
+val salaryCategoryEntity = Category(
+    id = salaryCategoryId,
+    name = salaryCategory.name
 )
 
 internal fun addDays(date: Date, days: Int): Date {
@@ -138,7 +176,7 @@ internal suspend fun insertDebts(db: XpenseDatabase) {
     }
 }
 
-val earningToCashId = 0L
+val earningToCashId = 1L
 val earningToCash = DBExpense(
     id = earningToCashId,
     date = getTestDate(0).time,
@@ -150,10 +188,10 @@ val earningToCash = DBExpense(
 
 val domainEarningToCash = earningToCash.toDomain()
 
-val expenseFromCardId = 0L
+val expenseFromCardId = 2L
 val expenseFromCard = DBExpense(
     id = expenseFromCardId,
-    date = getTestDate(0).time,
+    date = getTestDate(1).time,
     amount = BigDecimal.ONE,
     accountId = cardAccountId,
     categoryId = carCategoryId,
@@ -161,10 +199,10 @@ val expenseFromCard = DBExpense(
 )
 val domainExpenseFromCard = expenseFromCard.toDomain()
 
-val expenseFromCashId = 10L
+val expenseFromCashId = 3L
 val expenseFromCash = DBExpense(
     id = expenseFromCashId,
-    date = getTestDate(0).time,
+    date = getTestDate(2).time,
     amount = BigDecimal.ONE,
     accountId = cashAccountId,
     categoryId = carCategoryId,
