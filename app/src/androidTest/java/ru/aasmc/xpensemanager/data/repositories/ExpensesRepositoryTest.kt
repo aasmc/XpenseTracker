@@ -169,7 +169,12 @@ class ExpensesRepositoryTest: DatabaseTest() {
         val r = repo.addMoney(domainEarningToCash) // Total: 18 -> 19
         assertTrue(r is Result.Success)
 
-        val res = repo.deleteExpense(domainExpenseFromCard) // Total: 19 -> 20
+        val res = repo.deleteExpense(
+            domainExpenseFromCard.id,
+            domainExpenseFromCard.fromAccountId,
+            domainExpenseFromCard.amount,
+            domainExpenseFromCard.isEarning
+        ) // Total: 19 -> 20
         assertTrue(res is Result.Success)
 
         var acc = accountsDao.getAccountById(cardAccountId)!!
@@ -178,14 +183,24 @@ class ExpensesRepositoryTest: DatabaseTest() {
         var total = accountsDao.getTotalAmount()!!.amount
         assertEquals(BigDecimal.valueOf(20), total)
 
-        repo.deleteExpense(domainEarningToCash)
+        repo.deleteExpense(
+            domainEarningToCash.id,
+            domainEarningToCash.fromAccountId,
+            domainEarningToCash.amount,
+            domainEarningToCash.isEarning
+        )
         acc = accountsDao.getAccountById(cashAccountId)!!
         assertEquals(BigDecimal.valueOf(9), acc.amount)
 
         total = accountsDao.getTotalAmount()!!.amount
         assertEquals(BigDecimal.valueOf(19), total)
 
-        repo.deleteExpense(domainExpenseFromCash)
+        repo.deleteExpense(
+            domainExpenseFromCash.id,
+            domainExpenseFromCash.fromAccountId,
+            domainExpenseFromCash.amount,
+            domainExpenseFromCash.isEarning
+        )
         acc = accountsDao.getAccountById(cashAccountId)!!
         assertEquals(BigDecimal.valueOf(10), acc.amount)
 
@@ -253,7 +268,7 @@ class ExpensesRepositoryTest: DatabaseTest() {
     fun getExpensesAndEarningsForCategory_validCategory() = runTest {
         addExpensesToDB()
 
-        val result = repo.getExpensesAndEarningsForCategory(carCategoryEntity)
+        val result = repo.getExpensesAndEarningsForCategory(carCategoryEntity.id)
         checkResultListSize(result, 3)
     }
 
@@ -261,7 +276,7 @@ class ExpensesRepositoryTest: DatabaseTest() {
     fun getExpensesAndEarningsForCategory_emptyList() = runTest {
         addExpensesToDB()
 
-        val result = repo.getExpensesAndEarningsForCategory(salaryCategoryEntity)
+        val result = repo.getExpensesAndEarningsForCategory(salaryCategoryEntity.id)
         checkResultListSize(result, 0)
     }
 
@@ -269,10 +284,10 @@ class ExpensesRepositoryTest: DatabaseTest() {
     fun getExpensesAndEarningsForAccount_validAccount() = runTest {
         addExpensesToDB()
 
-        var result = repo.getExpensesAndEarningsForAccount(cardAccountEntity)
+        var result = repo.getExpensesAndEarningsForAccount(cardAccountEntity.id)
         checkResultListSize(result, 1)
 
-        result = repo.getExpensesAndEarningsForAccount(cashAccountEntity)
+        result = repo.getExpensesAndEarningsForAccount(cashAccountEntity.id)
         checkResultListSize(result, 2)
     }
 
@@ -280,7 +295,7 @@ class ExpensesRepositoryTest: DatabaseTest() {
     fun getExpensesAndEarningsForAccount_invalidAccount() = runTest {
         addExpensesToDB()
 
-        val result = repo.getExpensesAndEarningsForAccount(invalidAccount)
+        val result = repo.getExpensesAndEarningsForAccount(invalidAccount.id)
         checkResultListSize(result, 0)
     }
 
@@ -288,7 +303,7 @@ class ExpensesRepositoryTest: DatabaseTest() {
     fun getAllEarningsForAccount_validAccount() = runTest {
         addExpensesToDB()
 
-        val result = repo.getAllEarningsForAccount(cashAccountEntity)
+        val result = repo.getAllEarningsForAccount(cashAccountEntity.id)
         checkResultListSize(result, 1)
     }
 
@@ -296,7 +311,7 @@ class ExpensesRepositoryTest: DatabaseTest() {
     fun getAllEarningsForAccount_invalidAccount() = runTest {
         addExpensesToDB()
 
-        val result = repo.getAllEarningsForAccount(cardAccountEntity)
+        val result = repo.getAllEarningsForAccount(cardAccountEntity.id)
         checkResultListSize(result, 0)
     }
 

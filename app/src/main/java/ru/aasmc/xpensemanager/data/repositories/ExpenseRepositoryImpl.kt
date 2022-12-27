@@ -79,25 +79,30 @@ class ExpenseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteExpense(expense: Expense): Result<Unit> {
+    override suspend fun deleteExpense(
+        expenseId: Long,
+        fromAccountId: Long,
+        amount: BigDecimal,
+        isEarning: Boolean
+    ): Result<Unit> {
         return safeCacheCall {
             transactionRunner {
-                val dbAccount = accountsDao.getAccountById(expense.fromAccountId)
+                val dbAccount = accountsDao.getAccountById(fromAccountId)
                     ?: throw NoSuchElementException(
-                        "Method deleteExpense is called for expense: $expense," +
+                        "Method deleteExpense is called for expense with ID: $expenseId," +
                                 " but not account associated with the expense is in the DB"
                     )
 
                 updateAccountAmount(
                     prevAccount = dbAccount,
-                    newAmount = if (expense.isEarning) {
-                        dbAccount.amount.minus(expense.amount)
+                    newAmount = if (isEarning) {
+                        dbAccount.amount.minus(amount)
                     } else {
-                        dbAccount.amount.add(expense.amount)
+                        dbAccount.amount.add(amount)
                     }
                 )
-                updateTotalAmount(expense.amount, !expense.isEarning)
-                expenseDao.deleteExpenseOrEarning(expense.id)
+                updateTotalAmount(amount, !isEarning)
+                expenseDao.deleteExpenseOrEarning(expenseId)
             }
         }
     }
@@ -150,25 +155,25 @@ class ExpenseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getExpensesAndEarningsForCategory(category: Category): Result<List<Expense>> {
+    override suspend fun getExpensesAndEarningsForCategory(categoryId: Long): Result<List<Expense>> {
         return safeCacheCall {
-            expenseDao.getExpensesAndEarningsForCategory(category.id).map { dbExpense ->
+            expenseDao.getExpensesAndEarningsForCategory(categoryId).map { dbExpense ->
                 dbExpense.toDomain()
             }
         }
     }
 
-    override suspend fun getExpensesAndEarningsForAccount(account: Account): Result<List<Expense>> {
+    override suspend fun getExpensesAndEarningsForAccount(accountId: Long): Result<List<Expense>> {
         return safeCacheCall {
-            expenseDao.getExpensesAndEarningsForAccount(account.id).map { dbExpense ->
+            expenseDao.getExpensesAndEarningsForAccount(accountId).map { dbExpense ->
                 dbExpense.toDomain()
             }
         }
     }
 
-    override suspend fun getAllEarningsForAccount(account: Account): Result<List<Expense>> {
+    override suspend fun getAllEarningsForAccount(accountId: Long): Result<List<Expense>> {
         return safeCacheCall {
-            expenseDao.getAllEarningsForAccount(account.id).map { dbExpense ->
+            expenseDao.getAllEarningsForAccount(accountId).map { dbExpense ->
                 dbExpense.toDomain()
             }
         }

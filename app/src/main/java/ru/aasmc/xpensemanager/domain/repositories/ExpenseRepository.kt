@@ -1,9 +1,9 @@
 package ru.aasmc.xpensemanager.domain.repositories
 
 import ru.aasmc.xpensemanager.domain.model.Account
-import ru.aasmc.xpensemanager.domain.model.Category
 import ru.aasmc.xpensemanager.domain.model.Expense
 import ru.aasmc.xpensemanager.domain.model.Result
+import java.math.BigDecimal
 import java.util.*
 
 /**
@@ -29,12 +29,17 @@ interface ExpenseRepository {
     suspend fun addMoney(expense: Expense): Result<Unit>
 
     /**
-     * 1. Deletes the [expense] which is either an earning or the expense from the DB.
+     * 1. Deletes the [expenseId] which is either an earning or the expense from the DB.
      * 2. If the expense is an earning it subtracts the amount from the account it is
      *    associated with, otherwise it adds the amount.
      * 3. The same logic applies to the totalAmount.
      */
-    suspend fun deleteExpense(expense: Expense): Result<Unit>
+    suspend fun deleteExpense(
+        expenseId: Long,
+        fromAccountId: Long,
+        amount: BigDecimal,
+        isEarning: Boolean
+    ): Result<Unit>
 
     /**
      * 1. Deletes all expenses and earnings from the DB.
@@ -53,19 +58,19 @@ interface ExpenseRepository {
     suspend fun getExpensesAndEarningsForPeriod(from: Date, to: Date): Result<List<Expense>>
 
     /**
-     * 1. Retrieves all expenses and earnings for the specified [category].
+     * 1. Retrieves all expenses and earnings for the specified [categoryId].
      */
-    suspend fun getExpensesAndEarningsForCategory(category: Category): Result<List<Expense>>
+    suspend fun getExpensesAndEarningsForCategory(categoryId: Long): Result<List<Expense>>
 
     /**
-     * 1. Retrieves all expenses and earnings for the specified [account].
+     * 1. Retrieves all expenses and earnings for the specified [accountId].
      */
-    suspend fun getExpensesAndEarningsForAccount(account: Account): Result<List<Expense>>
+    suspend fun getExpensesAndEarningsForAccount(accountId: Long): Result<List<Expense>>
 
     /**
-     * 1. Retrieves all earnings for the specified [account].
+     * 1. Retrieves all earnings for the specified [accountId].
      */
-    suspend fun getAllEarningsForAccount(account: Account): Result<List<Expense>>
+    suspend fun getAllEarningsForAccount(accountId: Long): Result<List<Expense>>
 
     /**
      * 1. Retrieves all expenses and earnings stored in the DB.
