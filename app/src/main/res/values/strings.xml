@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">Xpense Manager</string>
+
+    <string name="pref_theme_light">Light</string>
+    <string name="pref_theme_dark">Dark</string>
+    <string name="pref_theme_system">Use system default</string>
+
+    <string name="pref_theme_light_value" translatable="false">light</string>
+    <string name="pref_theme_dark_value" translatable="false">dark</string>
+    <string name="pref_theme_system_value" translatable="false">system</string>
+
+    <string name="pref_theme_default_value" translatable="false">@string/pref_theme_system_value</string>
+
+    <string-array name="prefs_theme_titles">
+        <item>@string/pref_theme_light</item>
+        <item>@string/pref_theme_dark</item>
+        <item>@string/pref_theme_system</item>
+    </string-array>
+
+    <string-array name="prefs_theme_values">
+        <item>@string/pref_theme_light_value</item>
+        <item>@string/pref_theme_dark_value</item>
+        <item>@string/pref_theme_system_value</item>
+    </string-array>
+
+    <string name="pref_currency_default_value" translatable="false">RUB</string>
 </resources>
