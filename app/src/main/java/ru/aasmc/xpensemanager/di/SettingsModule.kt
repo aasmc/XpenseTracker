@@ -32,5 +32,5 @@ object SettingsModule {
         return context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
     }
 
-    const val SHARED_PREFS_NAME = "app_shared_preferences"
+    private const val SHARED_PREFS_NAME = "app_shared_preferences"
 }
