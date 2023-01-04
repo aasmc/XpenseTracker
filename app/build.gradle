@@ -29,6 +29,13 @@ android {
                         "room.expandProjection":"true"]
             }
         }
+
+        Properties properties = new Properties()
+        if (project.rootProject.file('local.properties').canRead()) {
+            properties.load(project.rootProject.file("local.properties").newDataInputStream())
+        }
+        String API_KEY = properties.getProperty("API_KEY")
+        buildConfigField("String", "API_KEY", API_KEY)
     }
 
     buildTypes {
@@ -91,12 +98,20 @@ dependencies {
     // Hilt navigation compose
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
+    // Networking
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
+    implementation "com.squareup.moshi:moshi:$moshi_version"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
+    implementation "com.squareup.okhttp3:okhttp:$okHttp_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okHttp_version"
+
     // Logging
     implementation 'com.jakewharton.timber:timber:5.0.1'
 
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
