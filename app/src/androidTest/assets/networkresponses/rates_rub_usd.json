@@ -1,0 +1,14 @@
+{
+  "date": "2023-01-05",
+  "info": {
+    "rate": 73.1234,
+    "timestamp": 1672947363
+  },
+  "query": {
+    "amount": 1,
+    "from": "USD",
+    "to": "RUB"
+  },
+  "result": 73.1234,
+  "success": true
+}

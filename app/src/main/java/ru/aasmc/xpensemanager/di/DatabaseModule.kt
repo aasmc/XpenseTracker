@@ -11,6 +11,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.aasmc.xpensemanager.data.cache.dao.AccountsDao
 import ru.aasmc.xpensemanager.data.cache.dao.CategoryDao
+import ru.aasmc.xpensemanager.data.cache.dao.CurrencyRateDao
 import ru.aasmc.xpensemanager.data.cache.dao.DebtDao
 import ru.aasmc.xpensemanager.data.cache.dao.ExpenseDao
 import ru.aasmc.xpensemanager.data.cache.database.AppDatabase
@@ -51,6 +52,9 @@ object DatabaseDaoModule {
 
     @Provides
     fun provideExpenseDao(db: XpenseDatabase): ExpenseDao = db.expenseDao()
+
+    @Provides
+    fun provideCurrencyRateDao(db: XpenseDatabase): CurrencyRateDao = db.currencyRateDao()
 }
 
 @Module

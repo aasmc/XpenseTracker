@@ -12,9 +12,10 @@ import ru.aasmc.xpensemanager.data.cache.model.*
         DBCategory::class,
         DBDebt::class,
         DBExpense::class,
-        DBTotalAmount::class
+        DBTotalAmount::class,
+        DBCurrencyRate::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 @TypeConverters(BigDecimalConverter::class)

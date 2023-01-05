@@ -24,9 +24,9 @@ android {
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments += [
-                        "room.schemaLocation":"$projectDir/schemas".toString(),
-                        "room.incremental":"true",
-                        "room.expandProjection":"true"]
+                        "room.schemaLocation"  : "$projectDir/schemas".toString(),
+                        "room.incremental"     : "true",
+                        "room.expandProjection": "true"]
             }
         }
 
@@ -39,12 +39,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            manifestPlaceholders = [usesCleartextTraffic: "true"]
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -119,4 +123,10 @@ dependencies {
     // Hilt Testing
     androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    testImplementation("com.squareup.okhttp3:mockwebserver:$mockwebserver_version")
+    androidTestImplementation("com.squareup.okhttp3:mockwebserver:$mockwebserver_version")
+
+    // tools
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.1.6"
 }

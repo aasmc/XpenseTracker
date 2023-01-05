@@ -6,7 +6,7 @@ import retrofit2.http.Query
 import ru.aasmc.xpensemanager.data.network.model.ApiConvertResponse
 
 interface ExchangeRateAPI {
-    @GET("/convert")
+    @GET(CONVERT_ENDPOINT)
     suspend fun convert(
         @Query("to") to: String,
         @Query("from") from: String,

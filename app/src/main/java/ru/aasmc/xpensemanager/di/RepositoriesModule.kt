@@ -7,10 +7,12 @@ import dagger.hilt.components.SingletonComponent
 import ru.aasmc.xpensemanager.data.repositories.AccountsRepositoryImpl
 import ru.aasmc.xpensemanager.data.repositories.CategoriesRepositoryImpl
 import ru.aasmc.xpensemanager.data.repositories.DebtRepositoryImpl
+import ru.aasmc.xpensemanager.data.repositories.ExchangeRateRepositoryImpl
 import ru.aasmc.xpensemanager.data.repositories.ExpenseRepositoryImpl
 import ru.aasmc.xpensemanager.domain.repositories.AccountsRepository
 import ru.aasmc.xpensemanager.domain.repositories.CategoriesRepository
 import ru.aasmc.xpensemanager.domain.repositories.DebtRepository
+import ru.aasmc.xpensemanager.domain.repositories.ExchangeRateRepository
 import ru.aasmc.xpensemanager.domain.repositories.ExpenseRepository
 import javax.inject.Singleton
 
@@ -33,5 +35,9 @@ abstract class RepositoriesModule {
     @Singleton
     @Binds
     abstract fun bindExpensesRepository(impl: ExpenseRepositoryImpl): ExpenseRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindExchangeRateRepository(impl: ExchangeRateRepositoryImpl): ExchangeRateRepository
 
 }

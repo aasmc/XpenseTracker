@@ -4,6 +4,7 @@ import ru.aasmc.xpensemanager.data.cache.database.XpenseDatabase
 import ru.aasmc.xpensemanager.data.cache.model.DBAccount
 import ru.aasmc.xpensemanager.data.cache.model.DBAccountType
 import ru.aasmc.xpensemanager.data.cache.model.DBCategory
+import ru.aasmc.xpensemanager.data.cache.model.DBCurrencyRate
 import ru.aasmc.xpensemanager.data.cache.model.DBDebt
 import ru.aasmc.xpensemanager.data.cache.model.DBExpense
 import ru.aasmc.xpensemanager.data.cache.model.DBTotalAmount
@@ -21,11 +22,14 @@ internal suspend fun insertAccounts(db: XpenseDatabase) {
     val accDao = db.accountsDao()
     accDao.addNewAccount(cardAccount)
     accDao.addNewAccount(cashAccount)
-    accDao.addTotalAmount(DBTotalAmount(
-        id = 1,
-        amount = initialTotalAmount
-    ))
+    accDao.addTotalAmount(
+        DBTotalAmount(
+            id = 1,
+            amount = initialTotalAmount
+        )
+    )
 }
+
 val cashAccountId = 1L
 val cashAccount = DBAccount(
     id = cashAccountId,
@@ -211,6 +215,21 @@ val expenseFromCash = DBExpense(
 val domainExpenseFromCash = expenseFromCash.toDomain()
 
 
+val rubUsdDBRate = DBCurrencyRate(
+    from = "USD",
+    to = "RUB",
+    rate = 71.4
+)
+
+val rubUsdJsonRate = 73.1234
+
+val rubEurDBRate = DBCurrencyRate(
+    from = "EUR",
+    to = "RUB",
+    rate = 78.1
+)
+
+val rubEurJsonRate = 76.1234
 
 
 

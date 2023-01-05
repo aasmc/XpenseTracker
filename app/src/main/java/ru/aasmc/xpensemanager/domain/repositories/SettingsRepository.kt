@@ -12,6 +12,10 @@ interface SettingsRepository {
     var currencyCode: String
     fun observeCurrencyCode(): Flow<String>
 
+    fun shouldSyncCurrencyRates(): Boolean
+
+    fun setLastSyncTime(timeMs: Long)
+
     enum class Theme {
         LIGHT,
         DARK,

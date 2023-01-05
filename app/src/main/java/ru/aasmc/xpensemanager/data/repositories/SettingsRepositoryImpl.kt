@@ -16,7 +16,8 @@ import javax.inject.Inject
 
 class SettingsRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences,
+    private val syncInterval: Long = MILLIS_IN_DAY
 ) : SettingsRepository {
 
     private val defaultThemeValue = context.getString(R.string.pref_theme_default_value)
@@ -55,7 +56,7 @@ class SettingsRepositoryImpl @Inject constructor(
     }
 
     override var currencyCode: String
-        get() = sharedPreferences.getString(KEY_CURRENCY, defaultThemeValue)!!
+        get() = sharedPreferences.getString(KEY_CURRENCY, defaultCurrencyValue)!!
         set(value) = sharedPreferences.edit {
             putString(KEY_CURRENCY, value)
         }
@@ -66,6 +67,23 @@ class SettingsRepositoryImpl @Inject constructor(
             .filter { it == KEY_CURRENCY }
             .map { currencyCode }
             .distinctUntilChanged()
+    }
+
+    override fun shouldSyncCurrencyRates(): Boolean {
+        val currentTimeMillis = System.currentTimeMillis()
+        val storedTimeMillis =
+            sharedPreferences.getLong(
+                LAST_SYNC_TIME,
+                System.currentTimeMillis() - (MILLIS_IN_DAY + 10) // make sure we sync if first time
+            )
+        val diff = currentTimeMillis - storedTimeMillis
+        return diff >= syncInterval
+    }
+
+    override fun setLastSyncTime(timeMs: Long) {
+        sharedPreferences.edit {
+            putLong(LAST_SYNC_TIME, timeMs)
+        }
     }
 
     private val SettingsRepository.Theme.storageKey: String
@@ -84,5 +102,7 @@ class SettingsRepositoryImpl @Inject constructor(
     companion object {
         const val KEY_THEME = "pref_theme"
         const val KEY_CURRENCY = "pref_currency"
+        const val LAST_SYNC_TIME = "pref_last_sync_time"
+        private const val MILLIS_IN_DAY = 86_400_000L
     }
 }

@@ -14,7 +14,7 @@ import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
-internal abstract class SettingsModuleBids {
+abstract class SettingsModuleBids {
     @Singleton
     @Binds
     abstract fun provideSharedPreferences(impl: SettingsRepositoryImpl): SettingsRepository
