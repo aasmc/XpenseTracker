@@ -42,4 +42,8 @@ class FakeSettingsRepository(
     override fun setLastSyncTime(timeMs: Long) {
         lastSyncTime = timeMs
     }
+
+    override fun getLastSyncTime(): Long {
+        return lastSyncTime
+    }
 }

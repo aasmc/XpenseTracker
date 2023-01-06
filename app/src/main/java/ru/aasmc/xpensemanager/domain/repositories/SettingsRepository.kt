@@ -16,6 +16,8 @@ interface SettingsRepository {
 
     fun setLastSyncTime(timeMs: Long)
 
+    fun getLastSyncTime(): Long
+
     enum class Theme {
         LIGHT,
         DARK,

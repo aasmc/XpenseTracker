@@ -70,12 +70,12 @@ class SettingsRepositoryImpl @Inject constructor(
     }
 
     override fun shouldSyncCurrencyRates(): Boolean {
-        val currentTimeMillis = System.currentTimeMillis()
         val storedTimeMillis =
             sharedPreferences.getLong(
                 LAST_SYNC_TIME,
                 System.currentTimeMillis() - (MILLIS_IN_DAY + 10) // make sure we sync if first time
             )
+        val currentTimeMillis = System.currentTimeMillis()
         val diff = currentTimeMillis - storedTimeMillis
         return diff >= syncInterval
     }
@@ -84,6 +84,10 @@ class SettingsRepositoryImpl @Inject constructor(
         sharedPreferences.edit {
             putLong(LAST_SYNC_TIME, timeMs)
         }
+    }
+
+    override fun getLastSyncTime(): Long {
+        return sharedPreferences.getLong(LAST_SYNC_TIME, 0L)
     }
 
     private val SettingsRepository.Theme.storageKey: String

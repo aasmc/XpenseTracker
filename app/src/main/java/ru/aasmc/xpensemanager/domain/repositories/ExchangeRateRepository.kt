@@ -8,5 +8,5 @@ interface ExchangeRateRepository {
 
     suspend fun syncExchangeRate(fromCurrency: String, toCurrency: String, force: Boolean = false): Result<Unit>
 
-    suspend fun syncAllExchangeRates(force: Boolean): Result<Unit>
+    suspend fun syncAllExchangeRates(force: Boolean = false): Result<Unit>
 }

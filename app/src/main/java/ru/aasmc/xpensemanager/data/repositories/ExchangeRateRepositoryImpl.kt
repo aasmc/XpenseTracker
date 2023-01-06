@@ -6,6 +6,7 @@ import ru.aasmc.xpensemanager.domain.exceptions.NetworkException
 import ru.aasmc.xpensemanager.domain.model.Result
 import ru.aasmc.xpensemanager.domain.repositories.ExchangeRateRepository
 import ru.aasmc.xpensemanager.domain.repositories.SettingsRepository
+import ru.aasmc.xpensemanager.util.AppCoroutineDispatcher
 import ru.aasmc.xpensemanager.util.logging.Logger
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -14,7 +15,8 @@ class ExchangeRateRepositoryImpl @Inject constructor(
     private val currencyRateDao: CurrencyRateDao,
     private val api: ExchangeRateAPI,
     private val settingsRepository: SettingsRepository,
-    private val logger: Logger
+    private val logger: Logger,
+    private val dispatcher: AppCoroutineDispatcher
 ) : ExchangeRateRepository {
 
     /**
@@ -29,8 +31,9 @@ class ExchangeRateRepositoryImpl @Inject constructor(
         val cacheResult = safeCacheCall {
             currencyRateDao.getRate(fromCurrency, toCurrency)
         }
+        val success = (cacheResult as? Result.Success)
         val rate =
-            (cacheResult as? Result.Success)?.data ?: return cacheResult as Result.Error
+            success?.data ?: return cacheResult as Result.Error
         return Result.Success(data = amount.multiply(BigDecimal.valueOf(rate)))
     }
 
@@ -47,15 +50,19 @@ class ExchangeRateRepositoryImpl @Inject constructor(
         force: Boolean
     ): Result<Unit> {
         if (force || settingsRepository.shouldSyncCurrencyRates()) {
-            val response = api.convert(toCurrency, fromCurrency, 1.0)
+            val apiResult = safeApiCall(dispatcher) {
+                api.convert(toCurrency, fromCurrency, 1.0)
+            }
+
+            val response = (apiResult as? Result.Success)?.data ?: return apiResult as Result.Error
             if (response.isSuccessful) {
-                val apiResult = response.body() ?: return Result.Error(
+                val apiBody = response.body() ?: return Result.Error(
                     NetworkException(
                         "Network request for currencies: $fromCurrency, $toCurrency returned empty response $response"
                     )
                 )
                 val dbResult = safeCacheCall {
-                    currencyRateDao.upsertRate(apiResult.toDBEntity())
+                    currencyRateDao.upsertRate(apiBody.toDBEntity())
                 }
                 settingsRepository.setLastSyncTime(System.currentTimeMillis())
                 return dbResult
@@ -91,11 +98,15 @@ class ExchangeRateRepositoryImpl @Inject constructor(
             }
             val dbCurrencies =
                 (dbResult as? Result.Success)?.data ?: return dbResult as Result.Error
+
             for (currency in dbCurrencies) {
-                val apiResponse = api.convert(currency.to, currency.from, 1.0)
+                val apiResult = safeApiCall(dispatcher) {
+                    api.convert(currency.to, currency.from, 1.0)
+                }
+                val apiResponse = (apiResult as? Result.Success)?.data ?: return apiResult as Result.Error
                 if (apiResponse.isSuccessful) {
-                    apiResponse.body()?.let { apiResult ->
-                        val dbCurrencyRate = apiResult.toDBEntity()
+                    apiResponse.body()?.let { apiBody ->
+                        val dbCurrencyRate = apiBody.toDBEntity()
                         val saveAttemptResult = safeCacheCall {
                             currencyRateDao.upsertRate(dbCurrencyRate)
                         }
@@ -120,7 +131,9 @@ class ExchangeRateRepositoryImpl @Inject constructor(
                     )
                 }
             }
-            settingsRepository.setLastSyncTime(System.currentTimeMillis())
+            if (dbCurrencies.isNotEmpty()) {
+                settingsRepository.setLastSyncTime(System.currentTimeMillis())
+            }
         }
         return Result.Success(Unit)
     }

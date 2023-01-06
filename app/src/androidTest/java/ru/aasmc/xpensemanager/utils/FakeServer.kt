@@ -10,6 +10,7 @@ import ru.aasmc.xpensemanager.util.logging.Logger
 import ru.aasmc.xpensemanager.util.logging.LoggerImpl
 import java.io.IOException
 import java.io.InputStream
+import java.util.concurrent.atomic.AtomicInteger
 
 class FakeServer {
     private val mockWebServer = MockWebServer()
@@ -19,6 +20,7 @@ class FakeServer {
     private val responsesBasePath = "networkresponses/"
     private val convertEndpointPath = endPointSeparator + CONVERT_ENDPOINT
     private val notFoundResponse = MockResponse().setResponseCode(404)
+    private val counter = AtomicInteger(0)
 
     val baseEndPoint
         get() = mockWebServer.url(endPointSeparator)
@@ -27,7 +29,7 @@ class FakeServer {
         mockWebServer.start(8095)
     }
 
-    fun setHappyPathDispatcher(asset: String) {
+    fun setHappyPathDispatcher(vararg assets: String) {
         mockWebServer.dispatcher = object : Dispatcher() {
             override fun dispatch(request: RecordedRequest): MockResponse {
                 val path = request.path ?: return notFoundResponse
@@ -35,6 +37,14 @@ class FakeServer {
                 return with(path) {
                     when {
                         startsWith(convertEndpointPath) -> {
+                            val asset = if (counter.get() == 0) {
+                                assets[0]
+                            } else if (counter.get() == 1) {
+                                assets[1]
+                            } else {
+                                ""
+                            }
+                            counter.getAndIncrement()
                             MockResponse()
                                 .setResponseCode(200)
                                 .setBody(getJson("${responsesBasePath}${asset}.json"))
@@ -49,6 +59,7 @@ class FakeServer {
     }
 
     fun shutDown() {
+        counter.set(0)
         mockWebServer.shutdown()
     }
 

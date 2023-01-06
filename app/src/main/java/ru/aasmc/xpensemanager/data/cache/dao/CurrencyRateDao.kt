@@ -15,6 +15,6 @@ interface CurrencyRateDao {
     @Query("SELECT rate FROM currency_rates WHERE from_currency = :fromCurr and to_currency = :toCurr")
     suspend fun getRate(fromCurr: String, toCurr: String): Double
 
-    @Query("SELECT * FROM currency_rates WHERE from_currency = :baseCurrency")
+    @Query("SELECT * FROM currency_rates WHERE to_currency = :baseCurrency")
     suspend fun getRatesForCurrency(baseCurrency: String): List<DBCurrencyRate>
 }

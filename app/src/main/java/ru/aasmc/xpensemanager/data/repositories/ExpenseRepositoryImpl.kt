@@ -12,6 +12,7 @@ import ru.aasmc.xpensemanager.domain.model.Category
 import ru.aasmc.xpensemanager.domain.model.Expense
 import ru.aasmc.xpensemanager.domain.model.Result
 import ru.aasmc.xpensemanager.domain.repositories.ExpenseRepository
+import ru.aasmc.xpensemanager.util.AppCoroutineDispatcher
 import java.math.BigDecimal
 import java.util.*
 import javax.inject.Inject
@@ -20,7 +21,7 @@ import kotlin.NoSuchElementException
 class ExpenseRepositoryImpl @Inject constructor(
     private val expenseDao: ExpenseDao,
     private val transactionRunner: DatabaseTransactionRunner,
-    private val accountsDao: AccountsDao
+    private val accountsDao: AccountsDao,
 ) : ExpenseRepository {
 
     override suspend fun spendMoney(expense: Expense): Result<Unit> {
